@@ -15,11 +15,15 @@ import java.io.File;
 @Configuration
 public class FileIntegrationConfiguration {
 
+    private static final String INPUT_FOLDER = "ex1_3/data/input";
+    private static final String OUTPUT_FOLDER = "ex1_3/data/output";
+    private static final String OUTPUT_FILE_NAME = "input_file_names.txt";
+
     @Bean
     IntegrationFlow fileIntegrationFlow(
-            FileReadingMessageSource fileAdapter,
-            FileTransformer transformer,
-            FileWritingMessageHandler outputFileHandler) {
+            final FileReadingMessageSource fileAdapter,
+            final FileTransformer transformer,
+            final FileWritingMessageHandler outputFileHandler) {
         return IntegrationFlows.from(fileAdapter, config -> config.poller(Pollers.fixedDelay(1000)))
                 .log(LoggingHandler.Level.INFO)
                 .transform(transformer, "returnFileName")
@@ -31,7 +35,7 @@ public class FileIntegrationConfiguration {
     @Bean
     FileReadingMessageSource fileAdapter() {
         FileReadingMessageSource fileSource = new FileReadingMessageSource();
-        fileSource.setDirectory(new File("ex1_3/data/input"));
+        fileSource.setDirectory(new File(INPUT_FOLDER));
 
         return fileSource;
     }
@@ -43,11 +47,11 @@ public class FileIntegrationConfiguration {
 
     @Bean
     FileWritingMessageHandler outputFileAdapter() {
-        File directory = new File("ex1_3/data/output");
+        File directory = new File(OUTPUT_FOLDER);
         FileWritingMessageHandler handler = new FileWritingMessageHandler(directory);
         handler.setExpectReply(false);
         handler.setAppendNewLine(true);
-        handler.setFileNameGenerator(name -> "input_file_names.txt");
+        handler.setFileNameGenerator(name -> OUTPUT_FILE_NAME);
         handler.setFileExistsMode(FileExistsMode.APPEND);
 
         return handler;
