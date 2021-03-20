@@ -1,3 +1,6 @@
 rootProject.name = 'exercises'
 include 'ex2_4'
+include 'ex3_1'
+include 'ex3_1:user-agent'
+findProject(':ex3_1:user-agent')?.name = 'user-agent'
 

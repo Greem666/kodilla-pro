@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group 'com.kodillapro'
+version '0.0.1-SNAPSHOT'
+
+jar {
+    archiveName("user-agent.jar")
+    //fat jar
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }}
+
+    manifest {
+        attributes(
+                'Premain-Class' : 'com.maciej.agent.Agent',
+                'Can-Redefine-Classes' : 'true',
+                'Can-Retransform-Classes' : 'true'
+        )
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    dependencies {
+        // https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
+        compile group: 'net.bytebuddy', name: 'byte-buddy', version: '1.10.22'
+    }
+}
